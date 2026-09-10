@@ -345,7 +345,7 @@ class GitHubContributionsView : View {
 
     private fun drawPlaceholder(canvas: Canvas) {
         if (!isInEditMode) return
-        canvas.getClipBounds(rect)
+        canvas.getClipBounds(rect!!)
         val width = rect!!.width()
         val verticalBlockNumber = 7
         val horizontalBlockNumber = getHorizontalBlockNumber(lastWeeks * 7, verticalBlockNumber)

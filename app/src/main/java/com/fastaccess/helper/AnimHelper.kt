@@ -179,12 +179,12 @@ object AnimHelper {
                         animator.addListener(listenerAdapter)
                         animator.start()
                     } else {
-                        listenerAdapter.onAnimationEnd(null)
+                        listenerAdapter.onAnimationEnd(ObjectAnimator())
                     }
                 }
             }
         } else {
-            listenerAdapter.onAnimationEnd(null)
+            listenerAdapter.onAnimationEnd(ObjectAnimator())
         }
     }
 

@@ -119,7 +119,7 @@ class MainActivity : BaseActivity<MainMvp.View, MainPresenter>(), MainMvp.View {
             }
             R.id.notifications -> {
                 ViewHelper.tintDrawable(
-                    item.setIcon(R.drawable.ic_notifications_none).icon,
+                    item.setIcon(R.drawable.ic_notifications_none).icon!!,
                     ViewHelper.getIconColor(this)
                 )
                 startActivity(Intent(this, NotificationActivity::class.java))
@@ -132,13 +132,13 @@ class MainActivity : BaseActivity<MainMvp.View, MainPresenter>(), MainMvp.View {
     override fun onPrepareOptionsMenu(menu: Menu): Boolean {
         if (isLoggedIn && NotificationDao.hasUnreadNotifications().blockingGet()) {
             ViewHelper.tintDrawable(
-                menu.findItem(R.id.notifications).setIcon(R.drawable.ic_ring).icon,
+                menu.findItem(R.id.notifications).setIcon(R.drawable.ic_ring).icon!!,
                 ViewHelper.getAccentColor(this)
             )
         } else {
             ViewHelper.tintDrawable(
                 menu.findItem(R.id.notifications)
-                    .setIcon(R.drawable.ic_notifications_none).icon, ViewHelper.getIconColor(this)
+                    .setIcon(R.drawable.ic_notifications_none).icon!!, ViewHelper.getIconColor(this)
             )
         }
         return super.onPrepareOptionsMenu(menu)

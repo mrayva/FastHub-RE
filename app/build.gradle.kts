@@ -14,7 +14,7 @@ fun loadConfig(): HashMap<String, String> {
     configs["IMGUR_CLIENT_ID"] = "5fced7f255e1dc9"
     configs["IMGUR_SECRET"] = "03025033403196a4b68b48f0738e67ef136ad64f"
     try {
-        val inputFile = rootProject.file("${rootProject.projectDir}\\app\\secrets.properties")
+        val inputFile = rootProject.file("app/secrets.properties")
         println("Secrets found!\nLoading FastHub-RE credentials...")
         inputFile.forEachLine {
             val data = it.split("=")
@@ -30,12 +30,12 @@ val config = loadConfig()
 
 android {
     namespace = "com.fastaccess"
-    compileSdk = 31
-    buildToolsVersion = "31.0.0"
+    compileSdk = 36
+    buildToolsVersion = "36.0.0"
     defaultConfig {
         applicationId = "com.fastaccess.github.revival"
         minSdk = 25
-        targetSdk = 31
+        targetSdk = 36
         versionCode = 477
         versionName = "4.7.7"
         buildConfigField("String", "GITHUB_APP_ID", "\"com.fastaccess.github.revival\"")
@@ -52,10 +52,10 @@ android {
     }
     signingConfigs {
         getByName("debug") {
-            storeFile = file("${rootProject.projectDir}\\app\\keys_debug.jks")
+            storeFile = rootProject.file("app/keys_debug.jks")
         }
         create("release") {
-            storeFile = file("${rootProject.projectDir}\\app\\keys_release.jks")
+            storeFile = rootProject.file("app/keys_release.jks")
             storePassword = config["PASSWORD"]
             keyPassword = config["PASSWORD"]
             keyAlias = config["KEY_ALIAS"]
@@ -84,6 +84,12 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+    buildFeatures {
+        buildConfig = true
     }
     sourceSets {
         getByName("main") {
@@ -233,10 +239,10 @@ dependencies {
 //    kapt("com.github.matthiasrobbers:shortbread-compiler:1.4.0")
 
     // objectbox
-    implementation("io.objectbox:objectbox-kotlin:3.1.2")
-    implementation("io.objectbox:objectbox-rxjava:3.1.2")
-//    debugImplementation("io.objectbox:objectbox-android-objectbrowser:3.1.2")
-    implementation("io.objectbox:objectbox-android:3.1.2")
+    implementation("io.objectbox:objectbox-kotlin:4.3.0")
+    implementation("io.objectbox:objectbox-rxjava:4.3.0")
+//    debugImplementation("io.objectbox:objectbox-android-objectbrowser:4.3.0")
+    implementation("io.objectbox:objectbox-android:4.3.0")
 
 
     // cache

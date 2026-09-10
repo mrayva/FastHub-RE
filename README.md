@@ -103,9 +103,7 @@ Yet another **open-source** GitHub client app based on FastHub looking forward f
 
 ## :gear: Building
 
-Thanks  to [zeromake](https://github.com/zeromake/FastHub) we are now able to compile the project using the latest Android Studio available!
-
-We don't need anymore Android Studio 4.1 and Gradle 3.5! Hallelujah!
+The project builds with **Gradle 8.11.1**, **Android Gradle Plugin 8.9.1** and **Kotlin 2.0.21**, targeting **API 36 (Android 16)** (`compileSdk`/`targetSdk` 36, `minSdk` 25). Any recent Android Studio release works, and a **JDK 17** toolchain is required to run the build (JDK 21+ is not supported by this Gradle/AGP combo).
 
 To build a debug version you can just import the project and start the building process. All the needed IDs (for debugging purpose) are hard-coded inside the `build.gradle.kts` meanwhile the debug keys are located in `/app/keys_debug.jks`.
 
@@ -120,14 +118,25 @@ To build your own release application you need to create a `secrets.properties` 
 
 Then, create your own keystore and put it in `/app/keys_release.jks`.
 
+### Command line build
+
+`build-apk.sh` (repo root, Linux/WSL) builds either variant from the terminal without needing Android Studio at all:
+
+```bash
+./build-apk.sh          # debug build, works out of the box
+./build-apk.sh release  # release build, needs secrets.properties + keys_release.jks as above
+```
+
+On first run it self-installs the Android SDK (platform 36, build-tools 36.0.0) and JDK 17 if they're not already present, then builds and prints the path to the resulting APK.
+
 ## :book: Spec / Open-Source libraries:
 
-- Minimum **SDK 25**
+- Minimum **SDK 25**, target **SDK 36 (Android 16)**
 - [**Kotlin**](https://github.com/JetBrains/kotlin)
 - **MVP**-architecture: [**ThirtyInch**](https://github.com/grandcentrix/ThirtyInch) because its ThirtyInch.
 - [**RxJava2**](https://github.com/ReactiveX/RxJava) & [**RxAndroid**](https://github.com/ReactiveX/RxAndroid) for Retrofit & background threads
 - [**Retrofit**](https://github.com/square/retrofit) for constructing the REST API
-- [**Requery**](https://github.com/requery/requery/) for offline-mode
+- [**ObjectBox**](https://github.com/objectbox/objectbox-java) for offline-mode
 - [**Stream API**](https://github.com/aNNiMON/Lightweight-Stream-API) for dealing with `Collections`
 - [**Android State**](https://github.com/evernote/android-state) for saving instance states
 - [**Material-BottomNavigation**](https://github.com/sephiroth74/Material-BottomNavigation) for `BottomBar` tabs

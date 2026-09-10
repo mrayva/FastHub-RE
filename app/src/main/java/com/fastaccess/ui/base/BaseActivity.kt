@@ -276,7 +276,7 @@ abstract class BaseActivity<V : FAView, P : BasePresenter<V>> : TiActivity<P, V>
     private val openSettingsLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) {
-        if (it.resultCode == Activity.RESULT_OK) {
+        if (it.resultCode == Activity.RESULT_OK || it.resultCode == SettingsActivity.THEME_CHANGE) {
             onThemeChanged()
         }
     }

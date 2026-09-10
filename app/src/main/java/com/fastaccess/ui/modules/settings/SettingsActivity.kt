@@ -162,6 +162,6 @@ class SettingsActivity : BaseActivity<FAView, BasePresenter<FAView>>(), Language
     }
 
     companion object {
-        private const val THEME_CHANGE = 32
+        const val THEME_CHANGE = 32
     }
 }

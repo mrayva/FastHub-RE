@@ -2,6 +2,7 @@ package com.fastaccess.ui.modules.theme
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.view.View
@@ -81,7 +82,7 @@ class ThemeActivity : BaseActivity<BaseMvp.FAView, BasePresenter<BaseMvp.FAView>
             val anim =
                 ViewAnimationUtils.createCircularReveal(parentLayout, cx, cy, 0f, finalRadius)
             anim.addListener(object : AnimatorListenerAdapter() {
-                override fun onAnimationEnd(animation: Animator?) {
+                override fun onAnimationEnd(animation: Animator) {
                     super.onAnimationEnd(animation)
                     window?.statusBarColor = color
                     changeNavColor(color)
@@ -102,7 +103,13 @@ class ThemeActivity : BaseActivity<BaseMvp.FAView, BasePresenter<BaseMvp.FAView>
 
     override fun onThemeApplied() {
         showMessage(R.string.success, R.string.change_theme_warning)
-        onThemeChanged()
+        // Return the result up through the back stack (ThemeActivity -> SettingsActivity ->
+        // whichever screen opened Settings) instead of launching a brand new MainActivity.
+        // The activity that originally opened Settings receives this via openSettingsLauncher
+        // and calls onThemeChanged() itself, which recreate()s it in place if it's MainActivity
+        // - no new task, no splash replay, no flash through the launcher.
+        setResult(RESULT_OK, Intent())
+        finish()
     }
 
 }

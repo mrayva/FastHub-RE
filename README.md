@@ -101,7 +101,7 @@ Yet another **open-source** GitHub client app based on FastHub looking forward f
 
 ## :gear: Building
 
-The project builds with **Gradle 8.11.1**, **Android Gradle Plugin 8.9.1** and **Kotlin 2.0.21**, targeting **API 36 (Android 16)** (`compileSdk`/`targetSdk` 36, `minSdk` 25). Any recent Android Studio release works, and a **JDK 17** toolchain is required to run the build (JDK 21+ is not supported by this Gradle/AGP combo).
+The project builds with **Gradle 8.11.1**, **Android Gradle Plugin 8.9.1** and **Kotlin 2.0.21**, targeting **API 36 (Android 16)** (`compileSdk`/`targetSdk` 36, `minSdk` 25). Any recent Android Studio release works, and **JDK 17 or newer** (JDK 21 confirmed working too) is required to run the build.
 
 To build a debug version you can just import the project and start the building process. All the needed IDs (for debugging purpose) are hard-coded inside the `build.gradle.kts` meanwhile the debug keys are located in `/app/keys_debug.jks`.
 

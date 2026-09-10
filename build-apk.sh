@@ -24,18 +24,23 @@ BUILD_TOOLS="36.0.0"
 echo "==> Project dir: $PROJECT_DIR"
 echo "==> Android SDK: $ANDROID_HOME"
 
-# --- 1. JDK 17 (minimum required by Gradle 8.11.1 / AGP 8.9.1) ---
-JAVA17="$(update-alternatives --list java 2>/dev/null | grep 'java-17' | head -1 | sed 's#/bin/java##')"
-if [ -z "$JAVA17" ] && [ -d /usr/lib/jvm/java-17-openjdk-amd64 ]; then
-    JAVA17="/usr/lib/jvm/java-17-openjdk-amd64"
+# --- 1. JDK 17+ (minimum required by Gradle 8.11.1 / AGP 8.9.1; JDK 21 works fine too) ---
+CURRENT_JAVA_MAJOR="$(java -version 2>&1 | head -1 | grep -oE '"[0-9]+' | tr -d '"' || true)"
+if [ -n "$CURRENT_JAVA_MAJOR" ] && [ "$CURRENT_JAVA_MAJOR" -ge 17 ] 2>/dev/null; then
+    JDK_HOME="$(dirname "$(dirname "$(readlink -f "$(command -v java)")")")"
+else
+    JDK_HOME="$(update-alternatives --list java 2>/dev/null | grep -E 'java-(1[7-9]|2[0-9])' | head -1 | sed 's#/bin/java##')"
+    if [ -z "$JDK_HOME" ] && [ -d /usr/lib/jvm/java-17-openjdk-amd64 ]; then
+        JDK_HOME="/usr/lib/jvm/java-17-openjdk-amd64"
+    fi
+    if [ -z "$JDK_HOME" ]; then
+        echo "==> Installing OpenJDK 17 (no JDK 17+ found; required to run this project's Gradle build)..."
+        sudo apt-get update -qq
+        sudo apt-get install -y -qq openjdk-17-jdk-headless
+        JDK_HOME="/usr/lib/jvm/java-17-openjdk-amd64"
+    fi
 fi
-if [ -z "$JAVA17" ]; then
-    echo "==> Installing OpenJDK 17 (required to run this project's Gradle build)..."
-    sudo apt-get update -qq
-    sudo apt-get install -y -qq openjdk-17-jdk-headless
-    JAVA17="/usr/lib/jvm/java-17-openjdk-amd64"
-fi
-export JAVA_HOME="$JAVA17"
+export JAVA_HOME="$JDK_HOME"
 export PATH="$JAVA_HOME/bin:$PATH"
 echo "==> Using JAVA_HOME=$JAVA_HOME"
 

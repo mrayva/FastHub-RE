@@ -6,6 +6,7 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import com.fastaccess.data.db.ObjectBox
 import com.fastaccess.helper.DeviceNameGetter
+import com.fastaccess.helper.PrefGetter
 import com.fastaccess.helper.PrefHelper.init
 import com.fastaccess.helper.SettingsDataStore
 import com.fastaccess.helper.TypeFaceHelper.generateTypeface
@@ -38,6 +39,7 @@ class App : Application() {
         ObjectBox.init(applicationContext)
         deleteDatabase("database.db")
         setupPreference()
+        unlockPremiumByDefault()
         generateTypeface(this)
         NotificationSchedulerJobTask.scheduleJob(this)
         if (BuildConfig.DEBUG) {
@@ -54,6 +56,14 @@ class App : Application() {
     private fun setupPreference() {
         init(this.applicationContext)
         SettingsDataStore.init()
+    }
+
+    // This build has no real Play Billing integration (PremiumActivity.onBuyAll()
+    // already just flips these same prefs locally instead of processing a purchase),
+    // so premium/pro features are unlocked unconditionally for everyone using it.
+    private fun unlockPremiumByDefault() {
+        PrefGetter.setProItems()
+        PrefGetter.setEnterpriseItem()
     }
 
     companion object {

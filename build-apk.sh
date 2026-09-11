@@ -3,7 +3,13 @@
 #
 # Usage:
 #   ./build-apk.sh              # build debug APK (default)
-#   ./build-apk.sh release      # build unsigned release APK (needs app/secrets.properties + app/keys_release.jks)
+#   ./build-apk.sh release      # build release APK, minified/shrunk, signed
+#                                # with app/keys_release.jks (needs that
+#                                # keystore + app/secrets.properties for its
+#                                # password/alias - see README for setup).
+#                                # This is a real, properly-signed release
+#                                # build, unlike OpenHub's, which has no
+#                                # dedicated keystore.
 #
 # First run downloads the Android SDK command-line tools + platform 36
 # (Android 16) + build-tools 36.0.0 into $ANDROID_HOME (~/Android/Sdk by

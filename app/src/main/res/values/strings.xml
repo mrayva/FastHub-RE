@@ -297,6 +297,7 @@
     <string name="creation_date_hint">When the file was created</string>
     <string name="last_updated_hint">When the file was last updated</string>
     <string name="mark_all_as_read">Mark all as read</string>
+    <string name="remove_from_list">Remove from list</string>
     <string name="all_notifications">All notifications</string>
     <string name="unread">Unread</string>
     <string name="all">All</string>

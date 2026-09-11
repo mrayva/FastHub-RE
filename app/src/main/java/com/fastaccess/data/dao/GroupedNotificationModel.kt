@@ -14,6 +14,14 @@ class GroupedNotificationModel {
     var notification: Notification? = null
     var date: Date? = null
 
+    /**
+     * HEADER-only: true once every notification under this repo has been
+     * marked read via the header's checkmark button. Drives the button's
+     * icon (single check -> double check) and, on a second tap while true,
+     * removes the whole group - see AllNotificationsPresenter.onItemClick.
+     */
+    var allRead: Boolean = false
+
     private constructor(repo: Repo) {
         type = HEADER
         this.repo = repo
@@ -44,8 +52,13 @@ class GroupedNotificationModel {
         fun construct(items: List<Notification>): List<GroupedNotificationModel> {
             val models: MutableList<GroupedNotificationModel> = ArrayList()
             if (items.isEmpty()) return models
+            // This used to filter to !value.unread (i.e. only ALREADY-READ
+            // notifications), which meant a repo header's group could never
+            // actually contain an unread row - the mark-all-as-read button
+            // (visible only when a group's first row is unread, see
+            // NotificationsAdapter.onBindView) was consequently unreachable
+            // in practice. "All notifications" should show everything.
             val grouped: Map<Repo, List<Notification>?> = items.asSequence()
-                .filter { value: Notification -> !value.unread }
                 .groupByTo(mutableMapOf()) { it.repository!! }
 
             grouped.asSequence()

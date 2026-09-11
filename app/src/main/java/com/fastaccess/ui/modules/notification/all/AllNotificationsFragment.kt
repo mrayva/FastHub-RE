@@ -12,7 +12,6 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.fastaccess.R
 import com.fastaccess.data.dao.GroupedNotificationModel
 import com.fastaccess.data.entity.Notification
-import com.fastaccess.data.entity.Repo
 import com.fastaccess.helper.Bundler
 import com.fastaccess.provider.scheme.SchemeParser.launchUri
 import com.fastaccess.provider.tasks.notification.ReadNotificationService
@@ -91,8 +90,27 @@ class AllNotificationsFragment :
         ReadNotificationService.start(requireContext(), notification.id)
     }
 
-    override fun onMarkAllByRepo(repo: Repo) {
-        presenter!!.onMarkReadByRepo(adapter!!.data.filterNotNull(), repo)
+    override fun onMarkAllByRepo(headerItem: GroupedNotificationModel) {
+        presenter!!.onMarkReadByRepo(adapter!!.data.filterNotNull(), headerItem)
+    }
+
+    override fun onRepoMarkedAllRead(headerItem: GroupedNotificationModel) {
+        headerItem.allRead = true
+        adapter?.swapItem(headerItem)
+    }
+
+    override fun onRemoveRepoGroup(headerItem: GroupedNotificationModel) {
+        val currentAdapter = adapter ?: return
+        val headerPosition = currentAdapter.getItem(headerItem)
+        if (headerPosition == -1) return
+        var endPosition = headerPosition + 1
+        while (endPosition < currentAdapter.itemCount &&
+            currentAdapter.getItem(endPosition)?.type != GroupedNotificationModel.HEADER
+        ) {
+            endPosition++
+        }
+        currentAdapter.subList(headerPosition, endPosition)
+        if (isSafe) requireActivity().invalidateOptionsMenu()
     }
 
     override fun onNotifyNotificationChanged(notification: GroupedNotificationModel) {

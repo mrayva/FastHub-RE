@@ -7,7 +7,6 @@ import com.fastaccess.data.dao.GroupedNotificationModel.Companion.construct
 import com.fastaccess.data.dao.NameParser
 import com.fastaccess.data.dao.Pageable
 import com.fastaccess.data.entity.Notification
-import com.fastaccess.data.entity.Repo
 import com.fastaccess.data.entity.dao.NotificationDao
 import com.fastaccess.helper.PrefGetter
 import com.fastaccess.helper.PrefGetter.isMarkAsReadEnabled
@@ -45,7 +44,11 @@ class AllNotificationsPresenter : BasePresenter<AllNotificationsMvp.View>(),
         } else {
             val repo = item.repo ?: return
             if (v.id == R.id.markAsRead) {
-                view!!.onMarkAllByRepo(repo)
+                if (item.allRead) {
+                    view!!.onRemoveRepoGroup(item)
+                } else {
+                    view!!.onMarkAllByRepo(item)
+                }
             } else {
                 RepoPagerActivity.startRepoPager(v.context, NameParser(repo.url))
             }
@@ -130,7 +133,8 @@ class AllNotificationsPresenter : BasePresenter<AllNotificationsMvp.View>(),
         manageDisposable(disposable)
     }
 
-    override fun onMarkReadByRepo(data: List<GroupedNotificationModel>, repo: Repo) {
+    override fun onMarkReadByRepo(data: List<GroupedNotificationModel>, headerItem: GroupedNotificationModel) {
+        val repo = headerItem.repo ?: return
         val disposable = RxHelper.getObservable(Observable.fromIterable(data))
             .filter { group: GroupedNotificationModel -> group.type == GroupedNotificationModel.ROW }
             .filter { group: GroupedNotificationModel -> group.notification != null && group.notification!!.unread }
@@ -149,7 +153,9 @@ class AllNotificationsPresenter : BasePresenter<AllNotificationsMvp.View>(),
                         notification
                     )
                 }
-            }) { throwable: Throwable -> onError(throwable) }
+            }, { throwable: Throwable -> onError(throwable) }, {
+                sendToView { view -> view?.onRepoMarkedAllRead(headerItem) }
+            })
         manageDisposable(disposable)
     }
 }

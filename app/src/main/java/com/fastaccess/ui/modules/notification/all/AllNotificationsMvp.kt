@@ -3,7 +3,6 @@ package com.fastaccess.ui.modules.notification.all
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener
 import com.fastaccess.data.dao.GroupedNotificationModel
 import com.fastaccess.data.entity.Notification
-import com.fastaccess.data.entity.Repo
 import com.fastaccess.ui.base.adapter.BaseViewHolder
 import com.fastaccess.ui.base.mvp.BaseMvp.FAView
 import net.grandcentrix.thirtyinch.callonmainthread.CallOnMainThread
@@ -18,8 +17,14 @@ interface AllNotificationsMvp {
         fun onUpdateReadState(item: GroupedNotificationModel, position: Int)
         fun onClick(url: String)
         fun onReadNotification(notification: Notification)
-        fun onMarkAllByRepo(repo: Repo)
+        fun onMarkAllByRepo(headerItem: GroupedNotificationModel)
         fun onNotifyNotificationChanged(notification: GroupedNotificationModel)
+
+        /** All of headerItem's repo notifications are now read - flip its button to the double-check icon. */
+        fun onRepoMarkedAllRead(headerItem: GroupedNotificationModel)
+
+        /** headerItem's double-check was tapped - remove the whole repo group (header + its rows) from the list. */
+        fun onRemoveRepoGroup(headerItem: GroupedNotificationModel)
     }
 
     interface Presenter : BaseViewHolder.OnItemClickListener<GroupedNotificationModel> {
@@ -27,6 +32,6 @@ interface AllNotificationsMvp {
         val notifications: MutableList<GroupedNotificationModel>
         fun onCallApi()
         fun onMarkAllAsRead(data: List<GroupedNotificationModel>)
-        fun onMarkReadByRepo(data: List<GroupedNotificationModel>, repo: Repo)
+        fun onMarkReadByRepo(data: List<GroupedNotificationModel>, headerItem: GroupedNotificationModel)
     }
 }

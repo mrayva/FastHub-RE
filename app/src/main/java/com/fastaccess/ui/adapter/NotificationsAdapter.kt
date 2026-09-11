@@ -47,14 +47,18 @@ class NotificationsAdapter :
 
     override fun onBindView(holder: BaseViewHolder<GroupedNotificationModel>, position: Int) {
         if (getItemViewType(position) == GroupedNotificationModel.HEADER) {
-            (holder as NotificationsHeaderViewHolder).bind(getItem(position)!!)
-            if (hideClear) if (getItem(
-                    (position + 1).coerceAtMost(itemCount - 1)
-                )!!.notification!!.unread
-            ) {
-                holder.itemView.findViewById<View>(R.id.markAsRead).visibility =
-                    View.VISIBLE
-            }
+            val header = getItem(position)!!
+            (holder as NotificationsHeaderViewHolder).bind(header)
+            // View holders are recycled, so this must set both VISIBLE and
+            // GONE explicitly (the original only ever set VISIBLE, which
+            // could leak a stale visible button onto an unrelated recycled
+            // header). Stays visible once allRead so the user can tap again
+            // to remove the group - see AllNotificationsPresenter.onItemClick.
+            val hasUnreadFirstItem = getItem(
+                (position + 1).coerceAtMost(itemCount - 1)
+            )?.notification?.unread == true
+            holder.itemView.findViewById<View>(R.id.markAsRead).visibility =
+                if (header.allRead || (hideClear && hasUnreadFirstItem)) View.VISIBLE else View.GONE
         } else {
             (holder as NotificationsViewHolder).bind(getItem(position)!!)
         }

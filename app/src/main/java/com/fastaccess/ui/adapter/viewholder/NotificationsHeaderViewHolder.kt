@@ -23,6 +23,12 @@ class NotificationsHeaderViewHolder private constructor(
         if (repo != null && headerTitle != null) {
             headerTitle!!.text = repo.fullName
         }
+        markAsRead?.setImageResource(
+            if (t.allRead) R.drawable.ic_done_all else R.drawable.ic_clear_all
+        )
+        markAsRead?.contentDescription = itemView.context.getString(
+            if (t.allRead) R.string.remove_from_list else R.string.mark_all_as_read
+        )
     }
 
     companion object {

@@ -198,7 +198,7 @@ abstract class BaseRecyclerAdapter<M, VH : BaseViewHolder<M>, P : BaseViewHolder
     fun subList(fromPosition: Int, toPosition: Int) {
         if (data.isEmpty()) return
         data.subList(fromPosition, toPosition).clear()
-        notifyItemRangeRemoved(fromPosition, toPosition)
+        notifyItemRangeRemoved(fromPosition, toPosition - fromPosition)
     }
 
     @SuppressLint("NotifyDataSetChanged")
